@@ -1,0 +1,25 @@
+Chapter 1: Introduction to Artificial Intelligence
+
+Artificial Intelligence (AI) is a branch of computer science that aims to create machines that can perform tasks typically requiring human intelligence. These tasks include decision-making, language translation, speech recognition, and visual perception.
+
+Subfields of AI:
+1. Machine Learning (ML): Algorithms that learn from data to make predictions or decisions.
+2. Natural Language Processing (NLP): Enables machines to understand and generate human language.
+3. Computer Vision: Allows machines to interpret and process visual information.
+4. Expert Systems: Software that mimics the decision-making abilities of a human expert.
+
+Applications of AI:
+- Self-driving cars
+- Virtual assistants (e.g., Siri, Alexa)
+- Fraud detection in banking
+- Personalized recommendations on Netflix or Amazon
+
+Advantages of AI:
+- Increases efficiency and accuracy
+- Works in hazardous environments
+- Can analyze large datasets quickly
+
+Challenges in AI:
+- Ethical concerns
+- Job displacement
+- Bias in training data this i have notes also

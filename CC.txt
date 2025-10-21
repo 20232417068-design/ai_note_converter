@@ -1,0 +1,24 @@
+Chapter 3: Cloud Computing Basics
+
+Cloud computing provides on-demand access to computing resources such as servers, storage, and applications over the internet.
+
+Service Models:
+1. Infrastructure as a Service (IaaS): Provides virtualized computing resources. Example: AWS EC2, Google Compute Engine.
+2. Platform as a Service (PaaS): Offers a development platform for building and deploying applications. Example: Google App Engine.
+3. Software as a Service (SaaS): Delivers software over the internet on a subscription basis. Example: Gmail, Microsoft 365.
+
+Deployment Models:
+- Public Cloud
+- Private Cloud
+- Hybrid Cloud
+
+Advantages:
+- Cost-efficient
+- Scalable and flexible
+- Reliable backup and recovery
+- Global accessibility
+
+Challenges:
+- Security and privacy concerns
+- Internet dependency
+- Downtime risks

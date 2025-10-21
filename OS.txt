@@ -1,0 +1,29 @@
+Chapter 5: Basics of Operating Systems
+
+An Operating System (OS) is system software that manages hardware and software resources and provides common services for computer programs.
+
+Functions of an Operating System:
+1. Process Management
+2. Memory Management
+3. File System Management
+4. Device Management
+5. Security and Access Control
+
+Types of Operating Systems:
+- Batch Operating System
+- Time-Sharing Operating System
+- Distributed Operating System
+- Real-Time Operating System
+
+Examples:
+Windows, Linux, macOS, Android
+
+Advantages:
+- Efficient resource utilization
+- User-friendly interface
+- Facilitates multitasking
+
+Challenges:
+- System crashes
+- Security vulnerabilities
+- Compatibility issues

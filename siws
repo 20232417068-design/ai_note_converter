@@ -1,0 +1,68 @@
+<?php
+include 'config.php';
+
+$message = '';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $msg = htmlspecialchars($_POST['message']);
+    
+    $result = handleContactForm($name, $email, $msg, $conn);
+    $message = $result;
+    
+    // Redirect to home with success message
+    header("Location: index.php?msg=" . urlencode($message));
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - SIWS College</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>SIWS College</h1>
+        <p>Get in Touch</p>
+        <?php if (isset($message)) echo "<p style='color: green;'>$message</p>"; ?>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="courses.php">Courses</a></li>
+            <li><a href="contact.php">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Contact Us</h2>
+            <form method="POST" action="">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+                
+                <button type="submit">Send Message</button>
+            </form>
+            <p>Or visit us at: Wadala, Mumbai - 400031 | Phone: +91-22-XXXXXXX</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SIWS College.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<?php $conn->close(); ?>

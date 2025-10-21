@@ -1,0 +1,22 @@
+Chapter 6: Fundamentals of Genetics
+
+Genetics is the study of heredity and variation in living organisms.
+
+Key Concepts:
+- Gene: Basic unit of heredity.
+- DNA: Molecule that carries genetic instructions.
+- Chromosome: Structure made of DNA and protein.
+- Allele: Different forms of a gene.
+- Genotype: Genetic makeup of an organism.
+- Phenotype: Physical expression of traits.
+
+Mendel’s Laws:
+1. Law of Segregation – Each trait is controlled by two alleles, one from each parent.
+2. Law of Independent Assortment – Genes for different traits are inherited independently.
+3. Law of Dominance – One allele may mask the effect of another.
+
+Applications:
+- Genetic engineering
+- DNA fingerprinting
+- Disease diagnosis
+- Crop improvement
