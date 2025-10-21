@@ -3,6 +3,7 @@ import streamlit as st
 import os
 import traceback
 import io
+import unicodedata
 from dotenv import load_dotenv
 from note_parser import pdf_to_text
 from huggingface_hub import InferenceClient
@@ -19,6 +20,8 @@ client = InferenceClient("facebook/bart-large-cnn", token=HF_TOKEN)
 
 # === Streamlit setup ===
 st.set_page_config(page_title="📚 AI Note Converter", layout="wide")
+st.session_state.setdefault("uploaded_text", "")
+
 st.title("📚✨ AI Note Converter – Study Buddy 2.0")
 
 st.markdown("""
@@ -35,55 +38,73 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+st.info("📱 Tip: If you're using a phone, keep this tab open — reloading will clear uploaded notes.")
 
-# === Helper functions ===
+
+# === Helper Functions ===
 def summarize_text(text):
-    """Summarize text using Hugging Face InferenceClient."""
+    """Summarize long text safely by chunking."""
     try:
-        response = client.summarization(text)
+        max_len = 1000  # safe chunk size for BART
+        chunks = [text[i:i + max_len] for i in range(0, len(text), max_len)]
+        summaries = []
 
-        if isinstance(response, list) and len(response) > 0:
-            first = response[0]
-            if isinstance(first, dict):
+        for chunk in chunks:
+            response = client.summarization(chunk)
+            if isinstance(response, list) and len(response) > 0:
+                first = response[0]
+                if isinstance(first, dict):
+                    for key in ("summary_text", "generated_text", "text", "content", "summary"):
+                        if key in first:
+                            summaries.append(first[key])
+                            break
+                    else:
+                        summaries.append(str(first))
+                else:
+                    summaries.append(str(first))
+            elif isinstance(response, dict):
                 for key in ("summary_text", "generated_text", "text", "content", "summary"):
-                    if key in first:
-                        return first[key]
-                return str(first)
+                    if key in response:
+                        summaries.append(response[key])
+                        break
+                else:
+                    summaries.append(str(response))
             else:
-                return str(first)
+                summaries.append(str(response))
 
-        if isinstance(response, dict):
-            for key in ("summary_text", "generated_text", "text", "content", "summary"):
-                if key in response:
-                    return response[key]
-            return str(response)
-
-        return str(response)
+        return "\n\n".join(summaries)
 
     except Exception as e:
         raise Exception(f"Summarization error: {e}")
 
 
-def generate_pdf(content):
-    """Generate a PDF file entirely in memory (no file saving)."""
+def generate_pdf(content: str) -> io.BytesIO:
+    """Generate a PDF safely with Unicode replacement (no latin-1 error)."""
+    replacements = {
+        "\u2014": "-",   # em dash
+        "\u2013": "-",   # en dash
+        "\u2018": "'",   # left single quote
+        "\u2019": "'",   # right single quote
+        "\u201c": '"',   # left double quote
+        "\u201d": '"',   # right double quote
+        "\u2022": "-",   # bullet
+        "\u2026": "...", # ellipsis
+        "\u2212": "-",   # minus
+    }
+
+    text = unicodedata.normalize("NFKD", content)
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    text = "".join(ch for ch in text if ch == "\n" or ch == "\t" or 32 <= ord(ch) <= 126 or ord(ch) >= 160)
+
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
+    for line in text.splitlines():
+        pdf.multi_cell(0, 8, line)
 
-    # Replace unsupported characters
-    safe_text = (
-        content.replace("’", "'")
-        .replace("“", '"')
-        .replace("”", '"')
-        .replace("–", "-")
-        .replace("•", "-")
-    )
-
-    for line in safe_text.splitlines():
-        pdf.multi_cell(0, 10, line)
-
-    # Save to memory buffer correctly
-    pdf_bytes = pdf.output(dest="S").encode("latin-1", "replace")
+    pdf_str = pdf.output(dest="S")
+    pdf_bytes = pdf_str.encode("latin-1", errors="replace") if isinstance(pdf_str, str) else pdf_str
     pdf_buffer = io.BytesIO(pdf_bytes)
     pdf_buffer.seek(0)
     return pdf_buffer
@@ -96,7 +117,6 @@ def get_download_button(content, filename, label):
     pdf_filename = filename.replace(".txt", ".pdf")
 
     col1, col2 = st.columns(2)
-
     with col1:
         st.download_button(
             label=f"💾 Download {label} (TXT)",
@@ -114,7 +134,7 @@ def get_download_button(content, filename, label):
         )
 
 
-# === File upload ===
+# === File Upload ===
 uploaded_file = st.file_uploader("📤 Upload your notes (PDF or TXT)", type=["pdf", "txt"])
 text = ""
 
@@ -170,5 +190,12 @@ if uploaded_file:
             except Exception as e:
                 st.error("❌ Error generating quiz.")
                 st.caption(str(e))
+
+    # === Reset Notes Button ===
+    if st.button("🔄 Reset Notes"):
+        st.session_state.clear()
+        st.success("✅ Notes cleared successfully! Upload new notes to start again.")
+        
+
 else:
     st.info("📂 Please upload a PDF or TXT file to get started.")
