@@ -1,0 +1,10 @@
+streamlit
+python-dotenv
+fpdf
+huggingface_hub
+langchain
+langchain-core
+langchain-community
+langchain-openai
+openai
+pypdf2
