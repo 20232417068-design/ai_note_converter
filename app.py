@@ -38,7 +38,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.info("📱 Tip: If you're using a phone, keep this tab open — reloading will clear uploaded notes.")
 
 
 # === Helper Functions ===
